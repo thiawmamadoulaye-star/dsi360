@@ -27,9 +27,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Précache des assets statiques + page hors-ligne
         globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-        navigateFallback: '/offline.html',
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/offline\.html$/, /^\/rest\/v1/, /^\/auth\/v1/, /^\/functions\/v1/],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/rest/v1') || url.pathname.startsWith('/auth/v1'),
@@ -37,7 +37,7 @@ export default defineConfig({
             options: {
               cacheName: 'dsi360-api-cache',
               networkTimeoutSeconds: 8,
-              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 }, // 1h
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 },
             },
           },
         ],
