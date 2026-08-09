@@ -69,7 +69,7 @@ export const MODULES = [
   {
     key: 'administration',
     label: 'Administration',
-    path: '/admin',
+    path: '/admin/utilisateurs',
     icon: 'FaCogs',
     roles: [ROLES.DSI, ROLES.SUPER_ADMIN],
     phase: 1,
