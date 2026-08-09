@@ -2,23 +2,13 @@
 import React, { useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { useAuth } from '../../contexts/AuthContext'
-
-const STATUTS = [
-  { value: 'en_service', label: 'En service' },
-  { value: 'en_cours_utilisation', label: 'En cours d\'utilisation' },
-  { value: 'en_stock', label: 'En stock' },
-  { value: 'en_maintenance', label: 'En maintenance' },
-  { value: 'obsolete', label: 'Obsolète' },
-  { value: 'reforme', label: 'Réformé' },
-  { value: 'perdu_vole', label: 'Perdu / Volé' },
-]
-
-const TYPES_EQUIPEMENT = ['PC portable', 'PC bureau', 'Serveur', 'Switch', 'Routeur', 'Imprimante', 'Mobile', 'Tablette', 'Écran', 'Autre']
+import { STATUTS, TYPES_EQUIPEMENT } from './parcitConstants'
 
 const vide = {
   code_actif: '', type_equipement: TYPES_EQUIPEMENT[0], marque: '', modele: '',
-  numero_serie: '', date_acquisition: '', date_bios: '', ram_go: '',
+  numero_serie: '', processeur: '', date_acquisition: '', date_bios: '', ram_go: '',
   os: '', os_version: '', localisation: '', statut: 'en_service', cout_acquisition: '',
+  utilisateur_nom_libre: '',
 }
 
 export default function NouvelEquipementModal({ onClose, onCreated }) {
@@ -39,6 +29,7 @@ export default function NouvelEquipementModal({ onClose, onCreated }) {
       marque: form.marque || null,
       modele: form.modele || null,
       numero_serie: form.numero_serie || null,
+      processeur: form.processeur || null,
       date_acquisition: form.date_acquisition || null,
       date_bios: form.date_bios || null,
       ram_go: form.ram_go ? Number(form.ram_go) : null,
@@ -47,6 +38,7 @@ export default function NouvelEquipementModal({ onClose, onCreated }) {
       localisation: form.localisation || null,
       statut: form.statut,
       cout_acquisition: form.cout_acquisition ? Number(form.cout_acquisition) : null,
+      utilisateur_nom_libre: form.utilisateur_nom_libre || null,
       created_by: profile?.id,
     })
 
@@ -87,9 +79,15 @@ export default function NouvelEquipementModal({ onClose, onCreated }) {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm text-gray-700 mb-1">Numéro de série</label>
-            <input value={form.numero_serie} onChange={(e) => setForm({ ...form, numero_serie: e.target.value })} className="w-full border rounded px-3 py-2" />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Numéro de série</label>
+              <input value={form.numero_serie} onChange={(e) => setForm({ ...form, numero_serie: e.target.value })} className="w-full border rounded px-3 py-2" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Processeur</label>
+              <input value={form.processeur} onChange={(e) => setForm({ ...form, processeur: e.target.value })} className="w-full border rounded px-3 py-2" />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -139,12 +137,17 @@ export default function NouvelEquipementModal({ onClose, onCreated }) {
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Utilisateur (nom libre, optionnel)</label>
+            <input value={form.utilisateur_nom_libre} onChange={(e) => setForm({ ...form, utilisateur_nom_libre: e.target.value })} className="w-full border rounded px-3 py-2" />
+          </div>
+
           {erreur && <p className="text-sm text-red-600">{erreur}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm border rounded">Annuler</button>
             <button type="submit" disabled={enregistrement} className="px-4 py-2 text-sm bg-navy-900 text-white rounded disabled:opacity-60">
-              {enregistrement ? 'Ajout…' : 'Ajouter l\'équipement'}
+              {enregistrement ? 'Ajout…' : "Ajouter l'équipement"}
             </button>
           </div>
         </form>
